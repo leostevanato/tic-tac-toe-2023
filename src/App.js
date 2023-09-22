@@ -3,41 +3,22 @@ export default function Board() {
     return <button className="square">{value}</button>;
   }
 
-  let rows = 3;
   let squares_per_row = 3;
   let total_squares = 9;
-  let count_squares = 0;
-  let rows_elements = [];
-  let squares_elements = [];
 
-  const group_rows_squares = Array.from(
+  return Array.from(
     { length: total_squares }, (_, i) => i + 1
   )
-    .reduce((groups, currentValue) => {
-      const arr = groups[groups.length - 1];
-      arr.push(currentValue);
-      if (arr.length === 3) groups.push([]);
-      return groups;
+    .reduce((rows, currentValue) => {
+      const arrTemp = rows[rows.length - 1];
+      arrTemp.push(currentValue);
+      if (arrTemp.length === squares_per_row) rows.push([]);
+      return rows;
     }, [[]])
-    .filter((chunk) => chunk.length);
-  
-  // return (
-  //   <>
-  //     <div className="board-row">
-  //       <Square key={i++} value={i++} />
-  //       <Square key={i++} value={i++} />
-  //       <Square key={i++} value={i++} />
-  //     </div>
-  //     <div className="board-row">
-  //       <Square key={i++} value={i++} />
-  //       <Square key={i++} value={i++} />
-  //       <Square key={i++} value={i++} />
-  //     </div>
-  //     <div className="board-row">
-  //       <Square key={i++} value={i++} />
-  //       <Square key={i++} value={i++} />
-  //       <Square key={i++} value={i++} />
-  //     </div>
-  //   </>
-  // );
+    .filter((chunk) => chunk.length) // Clean up last empty array
+    .map((row, rindex) => (
+      <div key={rindex} className="board-row">
+        {row.map((square, sindex) => <Square key={sindex} value={square} />)}
+      </div>
+    ));
 }
