@@ -1,6 +1,13 @@
 import { useState } from "react";
 
 export default function Board() {
+  let squares_per_row = 3;
+  let total_squares = 9;
+  let status;
+  
+  const [xIsNext, setXIsNext] = useState(true);
+  const [squares, setSquares] = useState(Array(total_squares).fill(null));
+
   function Square({ value, onSquareClick }) {
     return <button className="square" onClick={onSquareClick}>{value}</button>;
   }
@@ -12,14 +19,18 @@ export default function Board() {
   }
 
   function handleClick(i) {
+    if (squares[i]) {
+      return;
+    }
+
     const nextSquares = squares.slice();
-    nextSquares[i] = "X";
+
+    nextSquares[i] = (xIsNext)? "X" : "O";
+
     setSquares(nextSquares);
+    setXIsNext(!xIsNext);
   }
 
-  let squares_per_row = 3;
-  let total_squares = 9;
-  const [squares, setSquares] = useState(Array(total_squares).fill(null));
 
   return (
     <div className="board">
@@ -27,8 +38,11 @@ export default function Board() {
         squares.reduce((rows, currentValue) => {
             const arrTemp = rows[rows.length - 1];
             arrTemp.push(currentValue);
-            if (arrTemp.length === squares_per_row) rows.push([]);
-          
+
+            if (arrTemp.length === squares_per_row) {
+              rows.push([]);
+            }
+            
             return rows;
           }, [[]])
           .filter((chunk) => chunk.length) // Clean up last empty array
