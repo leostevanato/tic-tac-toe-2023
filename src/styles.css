@@ -46,6 +46,10 @@ ul {
   padding-inline-start: 20px;
 }
 
+ol > li {
+  margin-bottom: 0.4rem;
+}
+
 * {
   box-sizing: border-box;
 }
