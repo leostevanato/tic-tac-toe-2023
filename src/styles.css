@@ -84,9 +84,6 @@ body {
 .game {
   display: flex;
   flex-direction: row;
-}
-
-.board {
   width: fit-content;
   margin: 15% 0 0 50%;
 }
