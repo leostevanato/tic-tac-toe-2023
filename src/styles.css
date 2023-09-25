@@ -56,11 +56,6 @@ body {
   padding: 0;
 }
 
-.board {
-  width: fit-content;
-  margin: 25% 0 0 75%;
-}
-
 .square {
   background: #fff;
   border: 1px solid #999;
@@ -85,9 +80,15 @@ body {
 .status {
   margin-bottom: 10px;
 }
+
 .game {
   display: flex;
   flex-direction: row;
+}
+
+.board {
+  width: fit-content;
+  margin: 15% 0 0 50%;
 }
 
 .game-info {
