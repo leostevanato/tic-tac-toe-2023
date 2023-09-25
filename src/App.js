@@ -82,11 +82,17 @@ function Board({ xIsNext, squares, onPlay }) {
 export default function Game() {
   const [history, setHistory] = useState([Array(9).fill(null)]);
   const [currentMove, setCurrentMove] = useState(0);
+  const [historyOrder, setHistoryOrder] = useState("ASC");
   const currentSquares = history[currentMove];
   const xIsNext = currentMove % 2 === 0;
 
+  function toggleHistoryOrder() {
+    setHistoryOrder(current => (current == "ASC") ? "DESC" : "ASC");
+  }
+
   function handlePlay(nextSquares) {
     const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
+
     setHistory(nextHistory);
     setCurrentMove(nextHistory.length - 1);
   }
@@ -95,18 +101,19 @@ export default function Game() {
     setCurrentMove(nextMove);
   }
 
-  const moves = history.map((squares, move) => {
-    let description = (move > 0) ? 'Go to move #' + move : 'Go to game start';
-    
+  const moves = history.map((squares, move, histArray) => {
+    let move_key = (historyOrder == "DESC") ? (histArray.length - 1) - move : move;
+    let description = (move_key > 0) ? 'Go to move #' + move_key : 'Go to game start';
+
     return (
-      <li key={move}>
-        {currentMove == move ?
+      <li key={move_key}>
+        {currentMove == move_key ?
           currentMove > 0 ?
-            'Move #' + move
+            'Move #' + move_key
             :
             'Game start'
           :
-          <button id={move} onClick={() => jumpTo(move)}>{description}</button>
+          <button id={move_key} onClick={() => jumpTo(move_key)}>{description}</button>
         }
       </li>
     );
@@ -118,6 +125,7 @@ export default function Game() {
         <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
       </div>
       <div className="game-info">
+        <button onClick={() => toggleHistoryOrder()}>{historyOrder}</button>
         <ol>{moves}</ol>
       </div>
     </div>
