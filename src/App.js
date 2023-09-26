@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { createContext, useContext, useState } from "react";
+
+const WinnerContext = createContext(null);
 
 function calculateWinner(squares) {
   const possibleResults = [
@@ -16,31 +18,37 @@ function calculateWinner(squares) {
     const [a, b, c] = possibleResults[i];
 
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return squares[a];
+      return { "player": squares[a], "result": possibleResults[i] };
     }
   }
 
   return null;
 }
 
-function Square({ value, onSquareClick }) {
-  return <button className="square" onClick={onSquareClick}>{value}</button>;
+function Square({ value, onSquareClick, className }) {
+  return <button className={`square ${className}`} onClick={onSquareClick}>{value}</button>;
 }
 
 function Row({ firstIndex, childSquares, handleSquareClick }) {
+  const winner = useContext(WinnerContext);
+
   return <div className="board-row">
-    {childSquares.map((value, sindex) => <Square key={sindex} value={value} onSquareClick={() => handleSquareClick(firstIndex + sindex)} />)}
+    {childSquares.map((value, sindex) => {
+      const square_index = firstIndex + sindex;
+      const winner_class = (winner?.result?.includes(square_index)) ? "winner" : "";
+
+      return <Square key={square_index} value={value} onSquareClick={() => handleSquareClick(square_index)} className={winner_class} />;
+    })}
   </div>;
 }
 
 function Board({ xIsNext, squares, onPlay }) {
   let squares_per_row = 3;
   let status;
-
-  const winner = calculateWinner(squares);
+  const winner = useContext(WinnerContext);
 
   function handleClick(i) {
-    if (squares[i] || calculateWinner(squares)) {
+    if (squares[i] || winner) {
       return;
     }
 
@@ -66,7 +74,7 @@ function Board({ xIsNext, squares, onPlay }) {
     .map((row, rindex) => <Row key={rindex} firstIndex={squares_per_row * rindex} childSquares={row} handleSquareClick={handleClick} />);
 
   if (winner) {
-    status = "Winner: " + winner;
+    status = "Winner: " + winner.player;
   } else {
     status = "Next player: " + (xIsNext ? "X" : "O");
   }
@@ -85,6 +93,7 @@ export default function Game() {
   const [historyOrder, setHistoryOrder] = useState("ASC");
   const currentSquares = history[currentMove];
   const xIsNext = currentMove % 2 === 0;
+  const winner = calculateWinner(currentSquares);
 
   function toggleHistoryOrder() {
     setHistoryOrder(current => (current == "ASC") ? "DESC" : "ASC");
@@ -120,14 +129,16 @@ export default function Game() {
   });
 
   return (
-    <div className="game">
-      <div className="board">
-        <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
+    <WinnerContext.Provider value={winner}>
+      <div className="game">
+        <div className="board">
+          <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
+        </div>
+        <div className="game-info">
+          <button onClick={() => toggleHistoryOrder()}>{historyOrder}</button>
+          <ol>{moves}</ol>
+        </div>
       </div>
-      <div className="game-info">
-        <button onClick={() => toggleHistoryOrder()}>{historyOrder}</button>
-        <ol>{moves}</ol>
-      </div>
-    </div>
+    </WinnerContext.Provider>
   );
 }
