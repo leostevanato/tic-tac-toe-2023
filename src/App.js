@@ -74,9 +74,9 @@ function Board({ xIsNext, squares, onPlay }) {
     .map((row, rindex) => <Row key={rindex} firstIndex={squares_per_row * rindex} childSquares={row} handleSquareClick={handleClick} />);
 
   if (winner) {
-    status = (winner === "draw")? "Draw" : "Winner: " + winner.player;
+    status = (winner === "draw") ? <b>Draw</b> : <>Winner: <b>{winner.player}</b></>;
   } else {
-    status = "Next player: " + (xIsNext ? "X" : "O");
+    status = <>Next player: <b>{xIsNext ? "X" : "O"}</b></>;
   }
 
   return (
