@@ -22,7 +22,7 @@ function calculateWinner(squares) {
     }
   }
 
-  return null;
+  return squares.includes(null) ? null : "draw";
 }
 
 function Square({ value, onSquareClick, className }) {
@@ -74,7 +74,7 @@ function Board({ xIsNext, squares, onPlay }) {
     .map((row, rindex) => <Row key={rindex} firstIndex={squares_per_row * rindex} childSquares={row} handleSquareClick={handleClick} />);
 
   if (winner) {
-    status = "Winner: " + winner.player;
+    status = (winner === "draw")? "Draw" : "Winner: " + winner.player;
   } else {
     status = "Next player: " + (xIsNext ? "X" : "O");
   }
