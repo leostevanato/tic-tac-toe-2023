@@ -113,16 +113,25 @@ export default function Game() {
   const moves = history.map((squares, move, histArray) => {
     let move_key = (historyOrder == "DESC") ? (histArray.length - 1) - move : move;
     let description = (move_key > 0) ? 'Go to move #' + move_key : 'Go to game start';
+    let col_row = "";
+
+    if (move > 0) {
+      for (let i = 0; i < squares.length; i++) {
+        if (squares[i] != histArray[move - 1][i]) {
+          col_row = ` (${Math.ceil((i + 1) / 3)}, ${i + 1})`;
+        }
+      }
+    }
 
     return (
       <li key={move_key}>
         {currentMove == move_key ?
           currentMove > 0 ?
-            'Move #' + move_key
+            'Move #' + move_key + col_row
             :
             'Game start'
           :
-          <button id={move_key} onClick={() => jumpTo(move_key)}>{description}</button>
+          <button id={move_key} onClick={() => jumpTo(move_key)}>{description + col_row}</button>
         }
       </li>
     );
