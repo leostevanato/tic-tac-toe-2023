@@ -135,7 +135,7 @@ export default function Game() {
           <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
         </div>
         <div className="game-info">
-          <button onClick={() => toggleHistoryOrder()}>{historyOrder}</button>
+          <button className="order" onClick={() => toggleHistoryOrder()}>{historyOrder}</button>
           <ol>{moves}</ol>
         </div>
       </div>

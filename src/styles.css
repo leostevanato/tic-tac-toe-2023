@@ -96,6 +96,10 @@ body {
   margin-left: 20px;
 }
 
+button.order {
+  margin-left: 22px;
+}
+
 .winner {
   background-color: forestgreen;
 }
